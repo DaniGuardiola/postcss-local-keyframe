@@ -86,3 +86,47 @@ A fixed prefix that will be prepended to `@keyframes` animation names. If omitte
 `(filename: string, css: string) => string`
 
 A function that generates a hashed prefix specific to each CSS file. The default implementation is declared in the [`index.js`](./index.js) file (`plugin.generateHashedPrefix`).
+
+## Global animations
+
+If you want to either define or use global animations, you can use the `global()` syntax, which will prevent the plugin from prefixing the animation name. For example:
+
+```css
+@keyframes global(loader) {
+  0% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.animation {
+  animation: global(loader) 1.2s 500ms infinite ease-in-out both;
+}
+
+.animation-2 {
+  animation-name: global(loader);
+}
+```
+
+The output will be:
+
+```css
+@keyframes loader {
+  0% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.animation {
+  animation: loader 1.2s 500ms infinite ease-in-out both;
+}
+
+.animation-2 {
+  animation-name: loader;
+}
+```
