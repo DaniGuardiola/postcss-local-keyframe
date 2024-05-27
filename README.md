@@ -1,8 +1,14 @@
-# PostCSS Prefix Keyframe
+# PostCSS Local Keyframes
 
-[PostCSS] plugin for prefixing keyframes.
+[PostCSS](https://github.com/postcss/postcss) plugin that makes `@keyframes` animations local by prefixing their names.
 
-[PostCSS]: https://github.com/postcss/postcss
+```sh
+npm i postcss-local-keyframes
+```
+
+## Example
+
+### Input
 
 ```css
 @keyframes loader {
@@ -10,7 +16,7 @@
     transform: scale(0);
   }
   40% {
-    transform: scale(1.0);
+    transform: scale(1);
   }
 }
 
@@ -23,56 +29,60 @@
 }
 ```
 
+### Output
+
 ```css
-@keyframes prefixed-loader {
+@keyframes _ihg3y_loader {
   0% {
     transform: scale(0);
   }
   40% {
-    transform: scale(1.0);
+    transform: scale(1);
   }
 }
 
 .animation {
-  animation: prefixed-loader 1.2s 500ms infinite ease-in-out both;
+  animation: _ihg3y_loader 1.2s 500ms infinite ease-in-out both;
 }
 
 .animation-2 {
-  animation-name: prefixed-loader;
+  animation-name: _ihg3y_loader;
 }
 ```
 
 ## Usage
 
-**Step 1:** Install plugin:
+Add the plugin to your PostCSS configuration. If you are using autoprefixer, this plugin must be placed before it.
 
-```sh
-npm install --save-dev postcss postcss-prefix-keyframe
+```js
+// postcss.config.js
+module.exports = {
+  plugins: [require("postcss-local-keyframes"), require("autoprefixer")],
+};
 ```
 
-**Step 2:** Check you project for existed PostCSS config: `postcss.config.js`
-in the project root, `"postcss"` section in `package.json`
-or `postcss` in bundle config.
+You can also pass options to the plugin.
 
-If you do not use PostCSS, add it according to [official docs]
-and set this plugin in settings.
-
-**Step 3:** Add the plugin to plugins list:
-
-Better to put above autoprefixer. Also, be aware, if you are using outdated version of autoprefixer,
-prefixed rules, like `-webkit-keyframes` wont be processed. In this case, you just need to
-update autoprefixer version.
-
-```diff
+```js
+// postcss.config.js
 module.exports = {
   plugins: [
-+   require('postcss-prefix-keyframe')({ prefix: 'prefix-' }}),
-    require('autoprefixer')
-  ]
-}
+    require("postcss-local-keyframes")({ prefix: "my-prefix" }),
+    require("autoprefixer"),
+  ],
+};
 ```
 
 ## Options
-* `prefix` *String* - appends to the beginning of the at-rule and animation name
 
-[official docs]: https://github.com/postcss/postcss#usage
+### prefix
+
+`string`
+
+A fixed prefix that will be prepended to `@keyframes` animation names. If omitted, a hashed prefix specific to each CSS file will be used.
+
+### generateHashedPrefix
+
+`(filename: string, css: string) => string`
+
+A function that generates a hashed prefix specific to each CSS file. The default implementation is declared in the [`index.js`](./index.js) file (`plugin.generateHashedPrefix`).

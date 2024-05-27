@@ -1,8 +1,8 @@
-# Change Log
+# Changelog
 
 ## 0.0.1
 
-Initial release
+Initial release with hashed prefix support.
 
 ---
 

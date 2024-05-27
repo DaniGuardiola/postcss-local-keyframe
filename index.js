@@ -9,7 +9,7 @@ const plugin = ({
   const isHashPrefix = prefix === HASH_PREFIX;
   let resolvedPrefix = prefix;
   return {
-    postcssPlugin: "postcss-local-keyframe",
+    postcssPlugin: "postcss-local-keyframes",
 
     Once: (root) => {
       if (isHashPrefix)
@@ -52,7 +52,7 @@ const plugin = ({
 };
 
 plugin.generateHashedPrefix = function (filename, css) {
-  return `_${plugin.hash(`${filename} - ${css}`)}_`;
+  return `_${plugin.hash(`${filename} - ${css}`).slice(-5)}_`;
 };
 
 // from: https://gist.github.com/jlevy/c246006675becc446360a798e2b2d781?permalink_comment_id=4738050#gistcomment-4738050
@@ -61,7 +61,7 @@ plugin.hash = function simpleHash(str) {
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
   }
-  return (hash >>> 0).toString(36).slice(-5);
+  return (hash >>> 0).toString(36);
 };
 
 module.exports = plugin;

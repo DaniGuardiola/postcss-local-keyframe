@@ -1,20 +1,18 @@
 {
-  "name": "postcss-prefix-keyframe",
+  "name": "postcss-local-keyframes",
   "version": "0.0.1",
-  "description": "PostCSS plugin for prefixing keyframes",
+  "description": "PostCSS plugin that makes animations local",
   "keywords": [
     "postcss",
     "css",
-    "postcss-plugin",
-    "prefix-keyframe",
-    "prefix-animation"
+    "postcss-plugin"
   ],
   "scripts": {
     "test": "jest --coverage && eslint ."
   },
-  "author": "Vitaliy Ribachenko <vit@ribachenko.com>",
+  "author": "Dani Guardiola <hi@daniguardio.la>",
   "license": "MIT",
-  "repository": "VitaliyR/postcss-prefix-keyframe",
+  "repository": "DaniGuardiola/postcss-local-keyframe",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -36,21 +34,5 @@
   },
   "lint-staged": {
     "*.js": "eslint --fix"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 2017
-    },
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:jest/recommended"
-    ],
-    "rules": {
-      "jest/expect-expect": "off"
-    }
   }
 }
