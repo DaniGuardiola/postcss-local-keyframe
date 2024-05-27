@@ -2,6 +2,7 @@ yarn-error.log
 npm-debug.log
 package-lock.json
 yarn.lock
+bun.lockb
 
 *.test.js
 .travis.yml
