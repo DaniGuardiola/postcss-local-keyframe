@@ -67,7 +67,7 @@ You can also pass options to the plugin.
 // postcss.config.js
 module.exports = {
   plugins: [
-    require("postcss-local-keyframes")({ prefix: "my-prefix" }),
+    require("postcss-local-keyframes")({ prefix: "my-prefix-" }),
     require("autoprefixer"),
   ],
 };
