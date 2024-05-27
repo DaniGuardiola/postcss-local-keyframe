@@ -130,3 +130,7 @@ The output will be:
   animation-name: loader;
 }
 ```
+
+## Acknowledgments
+
+This plugin was forked from [postcss-prefix-keyframe](https://github.com/VitaliyR/postcss-prefix-keyframe) by [VitaliyR](https://github.com/VitaliyR).
