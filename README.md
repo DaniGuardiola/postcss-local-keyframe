@@ -112,7 +112,7 @@ module.exports = {
   plugins: [
     localKeyframesPlugin({
       generateHashedPrefix: (filename, css) =>
-        `${localKeyframesPlugin.hash(css)}-custom-`,
+        `${localKeyframesPlugin.hash(css).slice(-5)}-custom-`,
     }),
     require("autoprefixer"),
   ],
