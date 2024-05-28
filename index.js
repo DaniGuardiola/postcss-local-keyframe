@@ -1,15 +1,56 @@
 const parseAnimationShorthand = require("./lib/animationShorthand");
 
 const HASH_PREFIX = "<hash>";
-const GLOBAL_REGEXP = /^global\((.+)\)$/;
+const DEFAULT_GLOBAL_REGEXP = "^global--(.+)$";
+const DEFAULT_LOCAL_REGEXP = "^local--(.+)$";
 const PROCESSED = Symbol("processed");
 
 const plugin = ({
   prefix = HASH_PREFIX,
   generateHashedPrefix = plugin.generateHashedPrefix,
+  defaultScope = "global",
+  globalRegExp = DEFAULT_GLOBAL_REGEXP,
+  localRegExp = DEFAULT_LOCAL_REGEXP,
 }) => {
   const isHashPrefix = prefix === HASH_PREFIX;
   let resolvedPrefix = prefix;
+
+  const GLOBAL_REGEXP = new RegExp(globalRegExp);
+  const LOCAL_REGEXP = new RegExp(localRegExp);
+
+  function isGlobal(name) {
+    return GLOBAL_REGEXP.test(name);
+  }
+
+  function cleanGlobalName(name) {
+    return name.replace(GLOBAL_REGEXP, "$1");
+  }
+
+  function isLocal(name) {
+    return LOCAL_REGEXP.test(name);
+  }
+
+  function cleanLocalName(name) {
+    return name.replace(LOCAL_REGEXP, "$1");
+  }
+
+  const isGlobalByDefault = defaultScope === "global";
+
+  function applyNameScoping(node, getName, setName) {
+    if (node[PROCESSED]) return;
+    const name = getName(node);
+    if (name) {
+      const shouldBeGlobal =
+        isGlobal(name) || (isGlobalByDefault && !isLocal(name));
+      if (shouldBeGlobal) {
+        setName(node, cleanGlobalName(name), name);
+      } else if (!name.startsWith(resolvedPrefix)) {
+        setName(node, `${resolvedPrefix}${cleanLocalName(name)}`, name);
+      }
+    }
+    node[PROCESSED] = true;
+  }
+
   return {
     postcssPlugin: "postcss-local-keyframes",
 
@@ -24,48 +65,40 @@ const plugin = ({
 
     AtRule: {
       keyframes: (atRule) => {
-        if (atRule[PROCESSED]) return;
-        if (atRule.params) {
-          if (plugin.isGlobalName(atRule.params)) {
-            atRule.params = plugin.cleanGlobalName(atRule.params);
-          } else if (!atRule.params.startsWith(resolvedPrefix)) {
-            atRule.params = `${resolvedPrefix}${atRule.params}`;
-          }
-        }
-        atRule[PROCESSED] = true;
+        applyNameScoping(
+          atRule,
+          (node) => node.params,
+          (node, value) => (node.params = value)
+        );
       },
     },
 
     Declaration: {
       ["animation-name"]: (decl) => {
-        if (decl[PROCESSED]) return;
-        if (plugin.isGlobalName(decl.value)) {
-          decl.value = plugin.cleanGlobalName(decl.value);
-        } else if (!decl.value.startsWith(resolvedPrefix)) {
-          decl.value = `${resolvedPrefix}${decl.value}`;
-        }
-        decl[PROCESSED] = true;
+        applyNameScoping(
+          decl,
+          (node) => node.value,
+          (node, value) => (node.value = value)
+        );
       },
 
       animation: (decl, { result }) => {
-        if (decl[PROCESSED]) return;
-        const parsed = parseAnimationShorthand(decl.value);
-        if (parsed.name) {
-          if (plugin.isGlobalName(parsed.name)) {
-            decl.value = decl.value.replace(
-              parsed.name,
-              plugin.cleanGlobalName(parsed.name)
-            );
-          } else if (!parsed.name.startsWith(resolvedPrefix)) {
-            decl.value = decl.value.replace(
-              parsed.name,
-              `${resolvedPrefix}${parsed.name}`
-            );
+        applyNameScoping(
+          decl,
+          (node) => {
+            const name = parseAnimationShorthand(node.value).name;
+            if (!name) {
+              decl.warn(
+                result,
+                `Can't get animation name from shorthand property`
+              );
+            }
+            return name;
+          },
+          (node, value, name) => {
+            node.value = node.value.replace(name, value);
           }
-        } else {
-          decl.warn(result, `Can't get animation name from shorthand property`);
-        }
-        decl[PROCESSED] = true;
+        );
       },
     },
   };
@@ -82,14 +115,6 @@ plugin.hash = function simpleHash(str) {
     hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
   }
   return (hash >>> 0).toString(36);
-};
-
-plugin.isGlobalName = function (name) {
-  return GLOBAL_REGEXP.test(name);
-};
-
-plugin.cleanGlobalName = function (name) {
-  return name.replace(GLOBAL_REGEXP, "$1");
 };
 
 module.exports = plugin;
