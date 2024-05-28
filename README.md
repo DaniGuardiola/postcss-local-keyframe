@@ -121,7 +121,7 @@ module.exports = {
 
 ### globalRegExp
 
-`string` - default: `^global--(.+)$`
+`string` - default: `"^global--(.+)$"`
 
 A regular expression that matches global animation names. If an animation name matches this pattern, it will be considered global regardless of the `defaultScope` option. The pattern must contain a single capturing group that matches the animation name.
 
@@ -129,7 +129,7 @@ Do not pass a RegExp object directly to this option. Instead, pass a string that
 
 ### localRegExp
 
-`string` - default: `^local--(.+)$`
+`string` - default: `"^local--(.+)$"`
 
 A regular expression that matches local animation names. If an animation name matches this pattern, it will be considered local regardless of the `defaultScope` option. The pattern must contain a single capturing group that matches the animation name.
 
