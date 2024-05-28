@@ -103,7 +103,7 @@ A fixed prefix that will be prepended to local `@keyframes` animation names. If 
 
 A function that generates a hashed prefix specific to each CSS file. The default implementation is declared in the [`index.js`](./index.js) file (`plugin.generateHashedPrefix`), and it depends exclusively on the full content of the CSS file being processed.
 
-If you want to re-use the built-in hash function (insecure but simple and fast) in your custom hashed prefix generator, you can access it through the `hash` method in the plugin object:
+If you want to re-use the built-in hash function (unsafe but simple and fast) in your custom hashed prefix generator, you can access it through the `hash` method in the plugin object:
 
 ```js
 const localKeyframesPlugin = require("postcss-local-keyframes");
