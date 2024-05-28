@@ -225,7 +225,7 @@ The output will be:
 }
 ```
 
-The syntax for global and local animations can be customized with the `globalRegExp` and `localRegExp` options.
+The naming pattern for global and local animations can be customized with the `globalRegExp` and `localRegExp` options.
 
 ## Acknowledgments
 
