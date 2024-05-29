@@ -12,7 +12,10 @@
   },
   "author": "Dani Guardiola <hi@daniguardio.la>",
   "license": "MIT",
-  "repository": "DaniGuardiola/postcss-local-keyframe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniGuardiola/postcss-local-keyframe.git"
+  },
   "engines": {
     "node": ">=10.0.0"
   },
