@@ -11,7 +11,7 @@ const plugin = ({
   defaultScope = "global",
   globalRegExp = DEFAULT_GLOBAL_REGEXP,
   localRegExp = DEFAULT_LOCAL_REGEXP,
-}) => {
+} = {}) => {
   const isHashPrefix = prefix === HASH_PREFIX;
   let resolvedPrefix = prefix;
 
